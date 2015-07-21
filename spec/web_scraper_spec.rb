@@ -10,13 +10,14 @@ RSpec.describe WebScraper do
   end
 
   describe "#scrape", :vcr do
-    it "finds the right number of MP pages" do
+    it "scrapes MP the right number of MPs" do
       allow(subject).to receive(:scrape_mp_page).exactly(89).times
-      records = subject.scrape
     end
 
-    it 'scrapes all the details', focus: true do
+    it "scrapes MP data correctly" do
       records = subject.scrape
+      expect(records['Capalaba']).to eq({first_name: 'Donald', parliament_phone: '(07) 3915 0100', parliament_fax: '(07) 3915 0109', email: 'Capalaba@parliament.qld.gov.au'})
+      expect(records['Surfers Paradise']).to eq({first_name: 'John-Paul', parliament_phone: '(07) 5600 2100', parliament_fax: '(07) 5600 2109', email: 'Surfers.Paradise@parliament.qld.gov.au'})
     end
   end
 

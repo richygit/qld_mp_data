@@ -12,14 +12,13 @@ class WebScraper < Logging
   def scrape
     records = {}
     agent = Mechanize.new
-    p INDEX_URL
+    p "Scraping: #{INDEX_URL}"
     page = agent.get INDEX_URL
     
-    records = []
+    records = {}
     page.search('.members-list .right-thumbnail a').each do |member_link|
-      mp = scrape_mp_page(member_link.attr(:href))
-      p mp
-      records << mp
+      electorate, mp = scrape_mp_page(member_link.attr(:href))
+      records[electorate] = mp
     end
     records
   end
@@ -27,7 +26,7 @@ class WebScraper < Logging
   def scrape_mp_page(path)
     agent = Mechanize.new
     url = "http://#{SEARCH_HOST}#{path}"
-    p url
+    p "Scraping: #{url}"
     page = agent.get url
 
     mp = {}
@@ -37,7 +36,8 @@ class WebScraper < Logging
     mp[:parliament_phone] = contact.children[1].inner_text.strip
     mp[:parliament_fax] = contact.children[3].inner_text.strip
     mp[:email] = contact.children[6].inner_text
-    mp
+    electorate = page.search('.member-bio div.left p')[0].inner_text.scan(/^\s*Electorate\s*(.+)\s-/).flatten[0]
+    [electorate, mp]
   end
 
   def parse_first_name(name)
