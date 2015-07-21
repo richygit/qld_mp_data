@@ -6,15 +6,16 @@ describe XlsScraper do
   it "can download the CSV files" do
     VCR.turned_off do
       WebMock.allow_net_connect!
-      Net::HTTP.start(CsvScraper::CSV_HOST, 80) {|http| expect(http.head(CsvScraper::MP_CSV_PATH).code).to eq "200" }
-      Net::HTTP.start(CsvScraper::CSV_HOST, 80) {|http| expect(http.head(CsvScraper::SENATOR_CSV_PATH).code).to eq "200" }
+      Net::HTTP.start(XlsScraper::XLS_HOST, 80) {|http| expect(http.head(XlsScraper::XLS_PATH).code).to eq "200" }
     end
   end
 
-  describe "#scrape", :vcr, focus: true do
+  describe "#scrape", :vcr do
     it "scrapes details correctly" do
       records = subject.scrape
-      p records
+      expect(records['Springwood']).to eq({last_name: 'de Brenni', office_address: 'Shops 4-6, Springwood Rd Business Centre 71-73 Springwood Road', office_suburb: 'Springwood', office_state: 'QLD', office_postcode: '4127', party: 'ALP'})
+      expect(records['Redcliffe']).to eq({last_name: "D'Ath", office_address: 'PO Box 936', office_suburb: 'Redcliffe', office_state: 'QLD', office_postcode: '4020', party: 'ALP'})
+      expect(records.count).to eq(89)
     end
   end
 
