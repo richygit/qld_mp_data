@@ -19,8 +19,8 @@ class ScraperMain < Logging
     web = WebScraper.new.scrape
     records = merge(xls, web)
     records.each do |electorate, record|
-      @logger.info("### Saving #{record['first_name']} #{record['surname']}")
-      puts("### Saving #{record['first_name']} #{record['surname']}")
+      @logger.info("### Saving #{record[:first_name]} #{record[:last_name]}")
+      puts("### Saving #{record[:first_name]} #{record[:last_name]}")
       ScraperWiki::save(['electorate'], record.merge( 'electorate' => electorate ))
     end
   end
