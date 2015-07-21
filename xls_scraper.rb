@@ -24,6 +24,7 @@ class XlsScraper < Logging
       mp[:office_postcode] = office[3].strip
       mp[:party] = row[9]
       electorate = row[3].gsub('Member for ', '')
+      @logger.debug("XLS: Scraped member for #{electorate}")
       records[electorate] = mp
     end
     records

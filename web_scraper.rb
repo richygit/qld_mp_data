@@ -12,7 +12,7 @@ class WebScraper < Logging
   def scrape
     records = {}
     agent = Mechanize.new
-    p "Scraping: #{INDEX_URL}"
+    @logger.info "Scraping: #{INDEX_URL}"
     page = agent.get INDEX_URL
     
     records = {}
@@ -26,7 +26,7 @@ class WebScraper < Logging
   def scrape_mp_page(path)
     agent = Mechanize.new
     url = "http://#{SEARCH_HOST}#{path}"
-    p "Scraping: #{url}"
+    @logger.info "Scraping: #{url}"
     page = agent.get url
 
     mp = {}
