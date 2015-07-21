@@ -5,6 +5,7 @@ gem 'mechanize'
 gem 'rake'
 gem 'pdf-reader'
 gem 'spreadsheet'
+gem 'titleize'
 
 group :development do
   gem 'pry'

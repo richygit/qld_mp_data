@@ -1,5 +1,6 @@
 require 'spreadsheet'
 require 'open-uri'
+require 'titleize'
 require './logging'
 
 class XlsScraper < Logging
@@ -25,15 +26,16 @@ class XlsScraper < Logging
   end
 
   def parse_office_address(row)
-    full_address = "#{row[5]} #{row[6]} #{row[7]}"
-    full_address.scan(/(.+)\s(.+)\s(.+)\s(\d{4})/).flatten
-  end
+    if row[7].strip.length > 0
+      street_address = "#{row[5]} #{row[6]}"
+      res = row[7].scan(/(.+)\s(.+)\s(\d{4})/).flatten.map(&:strip)
+    else
+      street_address = row[5]
+      res = row[6].scan(/(.+)\s(.+)\s(\d{4})/).flatten.map(&:strip)
+    end
 
-  #`first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  #`email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  #`parliament_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  #`parliament_fax` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  #`office_fax` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  #`office_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  
+    street_address.squeeze!(' ')
+    res[0].titleize!
+    [street_address, res].flatten
+  end
 end
